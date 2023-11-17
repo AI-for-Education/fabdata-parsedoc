@@ -1,4 +1,4 @@
-name: parse-doc
+name: fabdata-parsedoc
 channels:
   - defaults
 dependencies:
