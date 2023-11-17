@@ -6,6 +6,7 @@ from datetime import datetime
 
 from fdllm import GPTCaller, ClaudeCaller
 from fdllm.llmtypes import LLMMessage
+from fdllm.sysutils import register_models
 from fdparsedoc import chunkgen, get_text_chunks
 from fdparsedoc.llmtypes import ADict
 
@@ -19,10 +20,12 @@ CHUNK_PROPERTIES = ["summary", "key_words"]
 TEMPERATURE = 0
 NWORDS = 150
 
+register_models(HERE.parent / "custom_models.yaml")
+
 #%%
 # used = -11
 used = 0
-files = HERE.parent / "parse_code/mbsseKP_files.json"
+files = HERE.parent / "data/mbsseKP_files.json"
 with open(files) as f:
     data = json.load(f)
 data = [dat for dat in data if len(dat["text"].split()) > 5000]
@@ -259,6 +262,7 @@ def process_document_pyramid(text, sys_msg_template, caller, chunksize=200):
         return response.Message
         
 #%%
+caller = GPTCaller("fabdata-openai-eastus2-gpt4")
 chunksize = 1000
 chunk_summaries, total_summary = process_document2(testtext, caller, chunksize)
 # logfile = (
