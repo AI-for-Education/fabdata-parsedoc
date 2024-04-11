@@ -28,7 +28,7 @@ setup(
     # There are some restrictions on what makes a valid project name
     # specification here:
     # https://packaging.python.org/specifications/core-metadata/#name
-    name='fabdata-parsedoc',  # Required
+    name='fabdata-parsedoc-test',  # Required
 
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
@@ -141,18 +141,17 @@ setup(
     install_requires=[
         "pytesseract <= 0.3.10",
         "pdfminer.six <= 20221105",
-        "pypdf <= 3.12.0",
-        "numpy <= 1.25.0",
+        "numpy",
         "fuzzywuzzy[speedup] <= 0.18.0",
-        "scikit-learn <= 1.3.0",
+        "scikit-learn", # cpython issue
         "joblib <= 1.3.1",
         "tqdm <= 4.65.0",
         "nltk <= 3.8.1",
+        "pymupdf",
         (
             "fabdata-llm @ "
-            "git+"
-            "https://github.com/AI-for-Education/fabdata-llm"
-            "@v0.9.1"
+            "git+ssh"
+            "://git@github.com/AI-for-Education/fabdata-llm.git"
         ),     
         ],  # Optional
 

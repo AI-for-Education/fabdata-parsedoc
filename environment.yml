@@ -1,12 +1,11 @@
-name: fabdata-parsedoc
+name: fabdata-parsedoc-test
 channels:
   - defaults
 dependencies:
   - python=3.10
   - pip
-  - conda-forge::textract
-  - conda-forge::poppler
   - pip:
     - -r requirements.txt
+    - pymupdf
     - ipykernel
     - black
