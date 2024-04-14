@@ -1,4 +1,4 @@
-name: fabdata-parsedoc-test
+name: fabdata-parsedoc
 channels:
   - defaults
 dependencies:
@@ -6,6 +6,5 @@ dependencies:
   - pip
   - pip:
     - -r requirements.txt
-    - pymupdf
     - ipykernel
     - black
