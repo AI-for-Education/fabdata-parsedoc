@@ -4,8 +4,6 @@ channels:
 dependencies:
   - python=3.10
   - pip
-  - conda-forge::textract
-  - conda-forge::poppler
   - pip:
     - -r requirements.txt
     - ipykernel

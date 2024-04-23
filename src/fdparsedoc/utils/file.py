@@ -5,8 +5,8 @@ import warnings
 from tempfile import TemporaryDirectory
 from io import BytesIO
 
-from pypdf import PdfReader
-import textract
+import fitz
+
 
 from ..constants import EXTS
 from .misc import filesgen
@@ -30,9 +30,7 @@ def extract_text(file, exts=EXTS, suffix=None):
     else:
         _file_error()
     try:
-        if suffix in [".pdf"]:
-            text = _extract_text_pdf(file)
-        elif suffix in [".doc", ".docx", ".rtf", ".html"]:
+        if suffix in [".pdf",".doc", ".docx", ".html"]: # ".rtf" is not supported
             text = _extract_text_doc(file)
         elif suffix in [".txt"]:
             text = _extract_text_plain(file)
@@ -46,13 +44,11 @@ def extract_text(file, exts=EXTS, suffix=None):
     except Exception as err:
         return name, None, suffix
 
-def _extract_text_pdf(file):
-    return [page.extract_text() for page in PdfReader(file).pages]
 
 def _extract_text_doc(file):
-    return [
-        textract.process(str(file)).decode("utf-8").strip().replace("\r", "")
-    ]
+    pdf = fitz.open(file)
+    return [page.get_text() for page in pdf.pages()]
+
 
 def _extract_text_plain(file):
     with open(file, "r") as f:
