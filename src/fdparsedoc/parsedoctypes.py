@@ -1,5 +1,7 @@
 import uuid
 
+from fdllm import get_caller
+
 from .constants import EXTS, CHUNK_SIZE, N_SUB_CHUNKS
 from .utils import extract_text, chunkgen, clean_text
 
@@ -60,10 +62,13 @@ class DocText:
             self.pages[idx] = [clean_text(page.strip()) for page in self.pages[idx]]
             self._cleaned = True
 
-    def populate_contents(self):
+    def populate_contents(self, caller=None):
         from .utils.doc import extract_contents
+        
+        if isinstance(caller, str):
+            caller = get_caller(caller)
 
-        self._contents = extract_contents(self)
+        self._contents = extract_contents(self, caller=caller)
 
     def contents(self, idx=None):
         if idx is None:

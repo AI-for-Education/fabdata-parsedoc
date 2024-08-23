@@ -3,7 +3,7 @@ import json
 from tqdm import tqdm
 
 from fdllm import GPTCaller
-from fdllm.llmtypes import LLMMessage
+from fdllm.llmtypes import LLMMessage, LLMImage
 
 class ADict(dict):
     def __init__(self, *args, **kwargs):
@@ -38,14 +38,19 @@ def general_query(
     jsonin,
     jsonout,
     caller=None,
+    role="system",
     temperature=0,
     max_input_tokens=None,
     min_new_token_window=500,
     reduce_callback=None,
+    images=[],
+    detail="low",
 ):
     if caller is None:
         caller = GPTCaller("gpt-4")
-    msg = gen_message(jsonin, jsonout)
+    if images and role == "system":
+        raise ValueError("Can''t provide images if role=='system'")
+    msg = gen_message(jsonin, jsonout, role, images, detail)
     ntok = len(caller.tokenize([msg]))
     if max_input_tokens is not None and ntok > max_input_tokens:
         raise ValueError("Message is too long")
@@ -56,7 +61,7 @@ def general_query(
         else:
             while max_tokens < min_new_token_window:
                 jsonin, jsonout = reduce_callback(jsonin, jsonout)
-                msg = gen_message(jsonin, jsonout)
+                msg = gen_message(jsonin, jsonout, images)
                 ntok = len(caller.tokenize([msg]))
                 max_tokens = caller.Token_Window - ntok
     out = caller.call(msg, max_tokens=max_tokens, temperature=temperature)
@@ -67,17 +72,18 @@ def general_query(
         raise ValueError("Invalid output")
     
 
-def gen_message(jsonin, jsonout):
+def gen_message(jsonin, jsonout, role="system", images=[], detail="low"):
     return LLMMessage(
-        Role="system",
+        Role=role,
         Message=(
             "Given the values in JSON1, fill in the empty values in JSON2:"
-            f"\n\nJSON1:\n{json.dumps(jsonin, indent=4, ensure_ascii=False)}"
-            f"\n\nJSON2:\n{json.dumps(jsonout, indent=4, ensure_ascii=False)}"
+            f"\n\nJSON1:\n{json.dumps(jsonin, ensure_ascii=False)}"
+            f"\n\nJSON2:\n{json.dumps(jsonout, ensure_ascii=False)}"
             "\n\nExpand any lists where necessary. Only return the raw json."
             " For any field names that contain '::', only reproduce the part of the"
             " name before the '::'."
-        )
+        ),
+        Images=LLMImage.list_from_images(images, detail=detail) if images else None
     )
 
 def clean_keys(d):

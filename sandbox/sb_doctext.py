@@ -12,7 +12,7 @@ doc = DocText.from_file(datapath)
 chunks = list(doc.chunks(chunksize=4000))
 
 #%%
-doc.populate_contents()
+doc.populate_contents(caller="gpt-4o")
 
 #%%
-start_page, end_page = doc.contents("TABLE 2: STRUCTURE OF THE GPF")
+start_page, end_page = doc.contents("Grade 1")

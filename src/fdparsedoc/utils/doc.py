@@ -2,7 +2,7 @@ from ..parsedoctypes import DocText
 from ..querystrings.contents import JSONIN, JSONOUT
 from ..utils import general_query
 
-def extract_contents(doc: DocText):
+def extract_contents(doc: DocText, caller=None):
     max_page = 6
     contents = []
     for i, (chunk, page) in enumerate(doc.chunks(chunksize=500, nsubchunks=7)):
@@ -13,7 +13,7 @@ def extract_contents(doc: DocText):
         jsonout = {
             JSONOUT["CONTENTS"]: [{"heading": None, "page:: int or numeral": None}],
         }
-        response = general_query(jsonin, jsonout)
+        response = general_query(jsonin, jsonout, caller=caller)
         prev_contents = contents
         contents = contents + [
             item for item in response.to_dict()["contents"] if item not in contents
@@ -59,7 +59,7 @@ def extract_contents(doc: DocText):
                 "isin:: true if section given by heading is in this page"
             ): None
         }
-        response = general_query(jsonin, jsonout)
+        response = general_query(jsonin, jsonout, caller=caller)
         if response.to_dict()["isin"]:
             break
     page_offset = page - check_page

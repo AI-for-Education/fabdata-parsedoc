@@ -36,7 +36,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.6.0',  # Required
+    version='0.7.0',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -142,9 +142,9 @@ setup(
         "pytesseract <= 0.3.10",
         "pdfminer.six <= 20221105",
         "pypdf <= 3.12.0",
-        "numpy <= 1.25.0",
+        "numpy <= 1.26.0",
         "fuzzywuzzy[speedup] <= 0.18.0",
-        "scikit-learn <= 1.3.0",
+        "scikit-learn",# <= 1.3.0",
         "joblib <= 1.3.1",
         "tqdm <= 4.65.0",
         "nltk <= 3.8.1",
@@ -152,7 +152,7 @@ setup(
             "fabdata-llm @ "
             "git+"
             "https://github.com/AI-for-Education/fabdata-llm"
-            "@v0.9.1"
+            "@v0.20.1"
         ),     
         ],  # Optional
 
